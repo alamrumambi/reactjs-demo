@@ -63,7 +63,7 @@ class Card extends React.Component {
         <input onChange={this.getText} type="text" />
         <button onClick={this.addTeam}>Add</button>
         <br></br>
-        {this.props.children}
+        {this.props.text}
         <ul>
           {this.state.teams.map((team) => {
             return <li key={team.id}>{team.id}. {team.name}</li>
@@ -77,8 +77,7 @@ class Card extends React.Component {
 function App() {
   return (
     <div className="App">
-      <Card>
-        List of teams:
+      <Card text="List of Teams">
       </Card>
     </div>
   );
