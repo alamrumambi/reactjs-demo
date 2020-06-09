@@ -1,37 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './Card';
+import TeamPhoto from './TeamPhoto';
 
-class Data extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            teams: [],
-            inputNew: ''
-        }
-    }
+const Data = (props) => {
 
-    getText = (e) => {
-        let text = e.target.value
-        this.setState({
-            inputNew: text
-        })
-    }
+    const [teams, setTeams] = useState([]);
+    const [input, setInput] = useState('');
+    const [info, setInfo] = useState(false);
+    const [selectedTeam, setSelectedTeam] = useState({});
 
-    addTeam = () => {
-        console.log(this.state.inputNew);
-        let input = this.state.teams;
-        const id = input[input.length - 1].id + 1;
-        // console.log(id);
-        input.push({
-            id,
-            name: this.state.inputNew,
-        })
-        this.setState({
-            teams: input
-        })
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         fetch('https://api.football-data.org/v2/competitions/2014/teams', {
             method: 'GET',
             headers: {
@@ -40,28 +18,41 @@ class Data extends React.Component {
         })
             .then(response => response.json())
             .then(data => {
-                this.setState({
-                    teams: data.teams
-                })
+                setTeams(data.teams);
             })
+    }, [])
+
+    const addTeam = () => {
+        const id = teams[teams.length - 1].id + 1;
+        setTeams(teams.concat({
+            id,
+            name: input,
+            crestUrl: 'https://i.imgur.com/IZpOVdE.jpg',
+        }))
+        setInput('');
     }
 
-    render() {
-        return (
-            <>
-                <h1> Football Teams </h1>
-                <input onChange={this.getText} type="text" />
-                <button onClick={this.addTeam}>Add</button>
-                <br></br>
-                {this.props.text}
-                <ul>
-                    {this.state.teams.map((team) => {
-                        return <Card team={team} key={team.id}></Card> 
-                    })}
-                </ul>
-            </>
-        )
+    const showInfo = (value, team) => {
+        setSelectedTeam(team);
+        setInfo(value);
     }
+
+    return (
+        <>
+            { info && <TeamPhoto team={ selectedTeam } showInfo={ showInfo } /> }
+            
+            <h1> Spain League Football Teams </h1>
+            <input onChange={(e) => setInput(e.target.value)} type="text" value={input} />
+            <button onClick={ addTeam }>Add</button>
+            <br></br>
+            <ul>
+                {teams.map((team) => {
+                    return <Card showInfo={ showInfo } team={ team } key={ team.id }></Card>
+                })}
+            </ul>
+        </>
+    )
+    // }
 }
 
 export default Data;
