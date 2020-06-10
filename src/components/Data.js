@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import TeamPhoto from './TeamPhoto';
+import useFetch from '../hooks/useFetch';
 
 const Data = (props) => {
 
+    const url = 'https://api.football-data.org/v2/competitions/2014/teams';
+    const method = 'GET';
+    const headers = {
+        'X-Auth-Token': '3eb1a67de11247f9ab7b41c8b8415a63',
+    };
+    const [data] = useFetch(url, method, headers);
+    // console.log('data di comp data >>', data);
     const [teams, setTeams] = useState([]);
     const [input, setInput] = useState('');
     const [info, setInfo] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState({});
 
     useEffect(() => {
-        fetch('https://api.football-data.org/v2/competitions/2014/teams', {
-            method: 'GET',
-            headers: {
-                'X-Auth-Token': '3eb1a67de11247f9ab7b41c8b8415a63'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setTeams(data.teams);
-            })
-    }, [])
+        setTeams(data);
+    }, [data])
 
     const addTeam = () => {
         const id = teams[teams.length - 1].id + 1;
@@ -45,6 +44,7 @@ const Data = (props) => {
             <input onChange={(e) => setInput(e.target.value)} type="text" value={input} />
             <button onClick={ addTeam }>Add</button>
             <br></br>
+            { data.length === 0 && <p>Loading..</p>}
             <ul>
                 {teams.map((team) => {
                     return <Card showInfo={ showInfo } team={ team } key={ team.id }></Card>
@@ -52,7 +52,6 @@ const Data = (props) => {
             </ul>
         </>
     )
-    // }
 }
 
 export default Data;
