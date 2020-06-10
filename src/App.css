@@ -25,6 +25,14 @@
   background-color: rgba(0, 0, 0, 0.89);
 }
 
+.Modal .greenAlert {
+  color: green;
+}
+
+.Modal .redAlert {
+  color: red;
+}
+
 .Modal .infoBox {
   width: 400px;
   padding: 20px;
@@ -34,7 +42,7 @@
   background-color: white;
 }
 
-.Modal button {
+.Modal .modalButton {
   position: absolute;
   top: 0;
   right: 0;

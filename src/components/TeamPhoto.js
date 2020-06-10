@@ -1,17 +1,56 @@
-import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom'
+import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default (props) => {
-    console.log(props);
+    // console.log(props);
+    const dispatch = useDispatch();
+    const teams = useSelector(state => state.favTeams);
     let history = useHistory();
+    const [greenAlert, setGreenAlert] = useState(false);
+    const [redAlert, setRedAlert] = useState(false);
     // let {team} = useLocation();
+
+    const addFav = () => {
+        // setRedAlert(false);
+        // setGreenAlert(false);
+        let find = false;
+        // console.log('teams >>', teams);
+        // console.log('team >>', props.location.team);
+        for(let i in teams) {
+            if(teams[i].id === props.location.team.id) {
+                setRedAlert(true);
+                find = true;
+                setGreenAlert(false);
+                // console.log('ketemu')
+                break;
+            }
+        }
+        if(!find) {
+            dispatch({
+                type: 'ADD_FAVTEAM',
+                payload: props.location.team
+            })
+            setRedAlert(false);
+            setGreenAlert(true);
+        }
+    }
 
     return (
         <div className="Modal">
             <div className="infoBox">
-                <button onClick={() => history.goBack()}>x</button>
+                <button className='modalButton' 
+                onClick={() => { 
+                    setGreenAlert(false);
+                    setRedAlert(false);
+                    history.goBack();
+                }}
+                >x</button>
                 <img src={props.location.team.crestUrl} width="50%" />
                 <h2>{props.location.team.name}</h2>
+                {greenAlert && <h2 className="greenAlert">Success add to favourites!!</h2>}
+                {redAlert && <h2 className="redAlert">This team already in Favourites</h2>}
+                {props.location.favourite && <button onClick={addFav}>Add to Favourites</button>}
             </div>
         </div>
     )

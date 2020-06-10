@@ -1,1 +1,1 @@
-export { default as AddData } from './AddData';
+export { default as FavTeam } from './FavTeam';

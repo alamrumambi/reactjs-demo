@@ -3,9 +3,11 @@ import {useRouteMatch, Link, Route, Switch} from 'react-router-dom';
 import Card from './Card';
 import TeamPhoto from './TeamPhoto';
 import useFetch from '../hooks/useFetch';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default () => {
     
+    const dispatch = useDispatch();
     const {url, path} = useRouteMatch();
     const fetchUrl = 'https://api.football-data.org/v2/competitions/2014/teams';
     const method = 'GET';
@@ -14,13 +16,17 @@ export default () => {
     };
     const [data] = useFetch(fetchUrl, method, headers);
     // console.log('data di comp data >>', data);
-    const [teams, setTeams] = useState([]);
+    // const [teams, setTeams] = useState([]);
+    const teams = useSelector(state => state.teams)
     const [input, setInput] = useState('');
-    const [info, setInfo] = useState(false);
+    // const [info, setInfo] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState({});
 
     useEffect(() => {
-        setTeams(data);
+        dispatch({
+            type: 'FETCH_TEAMS',
+            payload: data
+        })
     }, [data])
 
     // const showInfo = (value, team) => {
@@ -30,11 +36,15 @@ export default () => {
 
     const addTeam = () => {
         const id = teams[teams.length - 1].id + 1;
-        setTeams(teams.concat({
+        const payload = {
             id,
             name: input,
             crestUrl: 'https://i.imgur.com/IZpOVdE.jpg',
-        }))
+        }
+        dispatch({
+            type: 'ADD_TEAM',
+            payload
+        })
         setInput('');
     }
     
@@ -48,6 +58,7 @@ export default () => {
                 {teams.map((team) => {
                     return <Link key={team.id} to={{
                         pathname:`${url}/team/${team.id}`,
+                        favourite: true,
                         team }}>
                         <Card team={team}></Card>
                             </Link>
