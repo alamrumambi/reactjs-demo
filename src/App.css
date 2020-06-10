@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.nav-bar li {
+  display: inline;
+  margin: 0 5px;
+}
+
 .App ul {
   display: block;
 }

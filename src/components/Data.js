@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
+import {useRouteMatch, Link, Route, Switch} from 'react-router-dom';
 import Card from './Card';
 import TeamPhoto from './TeamPhoto';
 import useFetch from '../hooks/useFetch';
 
-const Data = (props) => {
-
-    const url = 'https://api.football-data.org/v2/competitions/2014/teams';
+export default () => {
+    
+    const {url, path} = useRouteMatch();
+    const fetchUrl = 'https://api.football-data.org/v2/competitions/2014/teams';
     const method = 'GET';
     const headers = {
         'X-Auth-Token': '3eb1a67de11247f9ab7b41c8b8415a63',
     };
-    const [data] = useFetch(url, method, headers);
+    const [data] = useFetch(fetchUrl, method, headers);
     // console.log('data di comp data >>', data);
     const [teams, setTeams] = useState([]);
     const [input, setInput] = useState('');
@@ -21,6 +23,11 @@ const Data = (props) => {
         setTeams(data);
     }, [data])
 
+    // const showInfo = (value, team) => {
+    //     setSelectedTeam(team);
+    //     setInfo(value);
+    // }
+
     const addTeam = () => {
         const id = teams[teams.length - 1].id + 1;
         setTeams(teams.concat({
@@ -30,28 +37,26 @@ const Data = (props) => {
         }))
         setInput('');
     }
-
-    const showInfo = (value, team) => {
-        setSelectedTeam(team);
-        setInfo(value);
-    }
-
-    return (
+    
+    return(
         <>
-            { info && <TeamPhoto team={ selectedTeam } showInfo={ showInfo } /> }
-            
-            <h1> Spain League Football Teams </h1>
             <input onChange={(e) => setInput(e.target.value)} type="text" value={input} />
-            <button onClick={ addTeam }>Add</button>
+            <button onClick={addTeam}>Add</button>
             <br></br>
-            { data.length === 0 && <p>Loading..</p>}
+            {data.length === 0 && <p>Loading..</p>}
             <ul>
                 {teams.map((team) => {
-                    return <Card showInfo={ showInfo } team={ team } key={ team.id }></Card>
+                    return <Link key={team.id} to={{
+                        pathname:`${url}/team/${team.id}`,
+                        team }}>
+                        <Card team={team}></Card>
+                            </Link>
                 })}
             </ul>
+            <Switch>
+                <Route path={`${path}/team/:id`} component={TeamPhoto}>
+                </Route>
+            </Switch>
         </>
     )
 }
-
-export default Data;
