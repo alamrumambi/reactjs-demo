@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
-import Data from './components/Data';
-import { FavTeam } from './pages';
+import TeamsList from './components/TeamsList';
+import TeamDetail from './components/TeamDetail';
+import { Favourites } from './pages';
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,7 +23,7 @@ function App() {
           <div className="nav-bar">
             <ul>
               <li>
-                <Link to="/teams">Home</Link>
+                <Link to="/">Home</Link>
               </li>|
             <li>
                 <Link to="/favourite-teams">Favourite Teams</Link>
@@ -31,9 +32,9 @@ function App() {
             <hr></hr>
           </div>
           <Switch>
-            <Route exact path="/" render={() => <Redirect to="/teams" />}></Route>
-            <Route path="/teams" component={Data}></Route>
-            <Route path="/favourite-teams" component={FavTeam}></Route>
+            <Route exact path="/" component={TeamsList}></Route>
+            <Route path="/favourite-teams" component={Favourites}></Route>
+            <Route path={`/team/:id`} component={ TeamDetail }></Route>
           </Switch>
         </div>
       </Router>

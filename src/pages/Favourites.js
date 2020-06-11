@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {useRouteMatch ,Link, Route, Switch} from 'react-router-dom';
-import Card from '../components/Card';
-import TeamPhoto from '../components/TeamPhoto';
-import { useSelector, useDispatch } from 'react-redux';
+import TeamCard from '../components/TeamCard';
+import TeamDetail from '../components/TeamDetail';
+import { useSelector } from 'react-redux';
 
 export default () => {
     
     const {url, path} = useRouteMatch();
-    const teams = useSelector(state => state.favTeams)
-    const [selectedTeam, setSelectedTeam] = useState({});
+    const teams = useSelector(state => state.favTeamReducer.favTeams);
     
     return(
         <>
@@ -16,16 +15,12 @@ export default () => {
             <ul>
                 {teams.map((team) => {
                     return <Link key={team.id} to={{
-                        pathname:`${url}/team/${team.id}`,
+                        pathname:`/team/${team.id}`,
                         team }}>
-                        <Card team={team}></Card>
+                        <TeamCard team={team}></TeamCard>
                             </Link>
                 })}
             </ul>
-            <Switch>
-                <Route path={`${path}/team/:id`} component={TeamPhoto}>
-                </Route>
-            </Switch>
         </>
     )
 }

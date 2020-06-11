@@ -1,22 +1,14 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import teamReducer from './reducers/teamReducer';
+import favTeamReducer from './reducers/favTeamReducer';
 
-const defaultState = {
-    teams: [],
-    favTeams: []
-};
+const reducer = combineReducers({
+    teamReducer,
+    favTeamReducer
+})
 
-const reducer = (state = defaultState, action) => {
-    switch(action.type) {
-        case 'FETCH_TEAMS': 
-            return {...state, teams: action.payload}
-        case 'ADD_TEAM':
-            return {...state, teams: state.teams.concat(action.payload)}
-        case 'ADD_FAVTEAM':
-            return {...state, favTeams: state.favTeams.concat(action.payload)}
-        default: return state
-    }
-}
-
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk, logger));
 
 export default store;

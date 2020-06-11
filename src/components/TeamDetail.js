@@ -1,36 +1,27 @@
 import React, {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { addFavTeam } from '../store/actions/favTeamActions';
 
 export default (props) => {
-    // console.log(props);
     const dispatch = useDispatch();
-    const teams = useSelector(state => state.favTeams);
+    const teams = useSelector(state => state.favTeamReducer.favTeams);
     let history = useHistory();
     const [greenAlert, setGreenAlert] = useState(false);
     const [redAlert, setRedAlert] = useState(false);
-    // let {team} = useLocation();
 
     const addFav = () => {
-        // setRedAlert(false);
-        // setGreenAlert(false);
         let find = false;
-        // console.log('teams >>', teams);
-        // console.log('team >>', props.location.team);
         for(let i in teams) {
             if(teams[i].id === props.location.team.id) {
                 setRedAlert(true);
                 find = true;
                 setGreenAlert(false);
-                // console.log('ketemu')
                 break;
             }
         }
         if(!find) {
-            dispatch({
-                type: 'ADD_FAVTEAM',
-                payload: props.location.team
-            })
+            dispatch(addFavTeam(props.location.team))
             setRedAlert(false);
             setGreenAlert(true);
         }

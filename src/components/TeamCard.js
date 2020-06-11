@@ -1,9 +1,6 @@
 import React from 'react';
-// import { useRouteMatch, Switch, Route } from 'react-router-dom';
-import TeamPhoto from './TeamPhoto';
 
 export default (props) => {
-    // const { url, path } = useRouteMatch();
 
     return (
         <div className="CardFrame">
