@@ -35,11 +35,11 @@ export default () => {
     }
 
     return (
-        <>
-            <input onChange={(e) => setInput(e.target.value)} type="text" value={input} />
-            <button onClick={addNewTeam}>Add</button>
+        <div data-testid="container">
+            <input data-testid="inputTeam" onChange={(e) => setInput(e.target.value)} type="text" value={input} />
+            <button data-testid="addButton" onClick={addNewTeam}>Add</button>
             <br></br>
-            {teams.length === 0 && <p>Loading..</p>}
+            {teams.length === 0 && <p data-testid="loadingText">Loading..</p>}
             <ul>
                 {teams.map((team) => {
                     return <Link key={team.id} to={{
@@ -51,6 +51,6 @@ export default () => {
                     </Link>
                 })}
             </ul>
-        </>
+        </div>
     )
 }
